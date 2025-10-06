@@ -20,23 +20,37 @@ export interface ApiResponseATC {
     data?: AffaireTypesChange
 }
 // Interface générique pour les réponses API
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
     success: boolean
     message: string
     data?: T
 }
 
 export async function getAffaireChangeTypeData(server: string = '', page: string, jsonCriteres: string = '{}'): Promise<ApiResponseATC> {
-    const urlol: string = `${server}${page}`
+    const url: string = `${server}${page}`
     const params = new URLSearchParams([['jsoncriteres', jsonCriteres]])
     try {
-        const response: AxiosResponse<AffaireTypesChange> = await axios.get(urlol, { params })
+        const response: AxiosResponse<AffaireTypesChange> = await axios.get(url, { params })
         const respData: ApiResponseATC = {
             "success": response.data.success,
             "message": response.data.message,
             "data": response.data
         }
-        return respData
+         return respData
+    } catch (error) {
+        return traiteAxiosError(error as AxiosError)
+    }
+}
+
+export async function sauveAffaireChangeType(server: string = '', page: string, jsonData: string = '{}'): Promise<ApiResponse<[]>> {
+    const url: string = `${server}${page}`
+    try {
+        const response: AxiosResponse = await axios.post(url, jsonData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        return response.data
     } catch (error) {
         return traiteAxiosError(error as AxiosError)
     }
