@@ -111,6 +111,7 @@ const bDemandeConfirme = ref<boolean>(false)
 const message = ref<string>('')
 
 const prepareChangement = async () => {
+  bDemandeConfirme.value = false
   messageErreur.value = ""
   const valeur = Number(idaffaireInput.value)
   if (idaffaireInput.value === '') {
